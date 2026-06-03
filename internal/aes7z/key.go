@@ -8,8 +8,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/bodgit/sevenzip/internal/util"
 	lru "github.com/hashicorp/golang-lru/v2"
+	"github.com/metacubex/sevenzip/internal/util"
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 )

@@ -18,9 +18,9 @@ import (
 	"time"
 
 	"github.com/bodgit/plumbing"
-	"github.com/bodgit/sevenzip/afero"
-	"github.com/bodgit/sevenzip/internal/pool"
-	"github.com/bodgit/sevenzip/internal/util"
+	"github.com/metacubex/sevenzip/afero"
+	"github.com/metacubex/sevenzip/internal/pool"
+	"github.com/metacubex/sevenzip/internal/util"
 )
 
 var (

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bodgit/sevenzip/afero"
+	"github.com/metacubex/sevenzip/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

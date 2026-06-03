@@ -478,7 +478,7 @@ func ExampleOpenReader() {
 func benchmarkArchiveParallel(b *testing.B, file string) {
 	b.Helper()
 
-	for range b.N {
+	for i := 0; i < b.N; i++ {
 		r, err := sevenzip.OpenReader(filepath.Join("testdata", file))
 		if err != nil {
 			b.Fatal(err)
@@ -520,7 +520,7 @@ func benchmarkArchiveParallel(b *testing.B, file string) {
 func benchmarkArchiveNaiveParallel(b *testing.B, file string, workers int) {
 	b.Helper()
 
-	for range b.N {
+	for i := 0; i < b.N; i++ {
 		r, err := sevenzip.OpenReader(filepath.Join("testdata", file))
 		if err != nil {
 			b.Fatal(err)
@@ -569,7 +569,7 @@ func benchmarkArchive(b *testing.B, file, password string, optimised bool) {
 
 	h := crc32.NewIEEE()
 
-	for range b.N {
+	for i := 0; i < b.N; i++ {
 		r, err := sevenzip.OpenReaderWithPassword(filepath.Join("testdata", file), password)
 		if err != nil {
 			b.Fatal(err)

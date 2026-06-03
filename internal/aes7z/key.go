@@ -7,8 +7,8 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"sync"
 
+	"github.com/bodgit/sevenzip/internal/util"
 	lru "github.com/hashicorp/golang-lru/v2"
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
@@ -34,7 +34,7 @@ const (
 var errCyclesPowerTooLarge = errors.New("aes7z: cycles power exceeds maximum")
 
 //nolint:gochecknoglobals
-var once = sync.OnceValues(func() (*lru.Cache[cacheKey, []byte], error) {
+var once = util.OnceValues(func() (*lru.Cache[cacheKey, []byte], error) {
 	return lru.New[cacheKey, []byte](cacheSize)
 })
 
@@ -71,7 +71,7 @@ func calculateKey(password string, cycles int, salt []byte) ([]byte, error) {
 		}
 
 		h := sha256.New()
-		for i := range uint64(1 << cycles) {
+		for i := uint64(0); i < uint64(1<<cycles); i++ {
 			// These will never error
 			_, _ = h.Write(b.Bytes())
 			_ = binary.Write(h, binary.LittleEndian, i)

@@ -18,10 +18,9 @@ import (
 	"time"
 
 	"github.com/bodgit/plumbing"
+	"github.com/bodgit/sevenzip/afero"
 	"github.com/bodgit/sevenzip/internal/pool"
 	"github.com/bodgit/sevenzip/internal/util"
-	"github.com/spf13/afero"
-	"go4.org/readerutil"
 )
 
 var (
@@ -206,7 +205,7 @@ func openReader(fs afero.Fs, name string) (io.ReaderAt, int64, []afero.File, err
 	files := []afero.File{f}
 
 	if ext := filepath.Ext(name); ext == ".001" {
-		sr := []readerutil.SizeReaderAt{io.NewSectionReader(f, 0, size)}
+		sr := []util.SizeReaderAt{io.NewSectionReader(f, 0, size)}
 
 		for i := 2; true; i++ {
 			f, err := fs.Open(fmt.Sprintf("%s.%03d", strings.TrimSuffix(name, ext), i))
@@ -242,7 +241,7 @@ func openReader(fs afero.Fs, name string) (io.ReaderAt, int64, []afero.File, err
 			sr = append(sr, io.NewSectionReader(f, 0, info.Size()))
 		}
 
-		mr := readerutil.NewMultiReaderAt(sr...)
+		mr := util.NewMultiReaderAt(sr...)
 		reader, size = mr, mr.Size()
 	}
 

@@ -85,7 +85,7 @@ func readUint64(r io.ByteReader) (uint64, error) {
 		v |= uint64(b&((1<<(8-l))-1)) << (8 * l)
 	}
 
-	for i := range l {
+	for i := 0; i < l; i++ {
 		b, err := r.ReadByte()
 		if err != nil {
 			return 0, fmt.Errorf("readUint64: ReadByte error: %w", err)
@@ -123,7 +123,7 @@ func readBool(r io.ByteReader, count uint64) ([]bool, error) {
 	defined := make([]bool, 0, min(count, 1024))
 
 	var b, mask byte
-	for range count {
+	for i := uint64(0); i < count; i++ {
 		if mask == 0 {
 			var err error
 
@@ -174,7 +174,7 @@ func readSizes(r io.ByteReader, count uint64) ([]uint64, error) {
 	// because 7z decompression CPU cycles dominate total execution time.
 	sizes := make([]uint64, 0, min(count, 1024))
 
-	for range count {
+	for i := uint64(0); i < count; i++ {
 		size, err := readUint64(r)
 		if err != nil {
 			return nil, err
@@ -321,7 +321,7 @@ func readFolder(r util.Reader) (*folder, error) {
 
 	f.coder = make([]*coder, 0, min(coders, 16))
 
-	for range coders {
+	for i := uint64(0); i < coders; i++ {
 		coder, err := readCoder(r)
 		if err != nil {
 			return nil, err
@@ -349,7 +349,7 @@ func readFolder(r util.Reader) (*folder, error) {
 
 	f.bindPair = make([]*bindPair, 0, min(bindPairs, 16))
 
-	for range bindPairs {
+	for i := uint64(0); i < bindPairs; i++ {
 		in, err := readUint64Bounded(r, false)
 		if err != nil {
 			return nil, err
@@ -370,14 +370,14 @@ func readFolder(r util.Reader) (*folder, error) {
 
 	if f.packedStreams == 1 {
 		f.packed = []uint64{}
-		for i := range f.in {
+		for i := uint64(0); i < f.in; i++ {
 			if f.findInBindPair(i) == nil {
 				f.packed = append(f.packed, i)
 			}
 		}
 	} else {
 		f.packed = make([]uint64, f.packedStreams)
-		for i := range f.packedStreams {
+		for i := uint64(0); i < f.packedStreams; i++ {
 			if f.packed[i], err = readUint64(r); err != nil {
 				return nil, err
 			}
@@ -425,7 +425,7 @@ func readUnpackInfo(r util.Reader) (*unpackInfo, error) {
 
 	u.folder = make([]*folder, 0, min(folders, 1024))
 
-	for range folders {
+	for i := uint64(0); i < folders; i++ {
 		folder, err := readFolder(r)
 		if err != nil {
 			return nil, err
@@ -972,4 +972,18 @@ func readEncodedHeader(r util.Reader) (*header, error) {
 	}
 
 	return header, nil
+}
+
+func min[T ~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64](a, b T) T {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max[T ~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64](a, b T) T {
+	if a > b {
+		return a
+	}
+	return b
 }

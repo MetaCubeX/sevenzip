@@ -70,3 +70,17 @@ func newReader(readers []io.ReadCloser, conv converter) (io.ReadCloser, error) {
 		conv: conv,
 	}, nil
 }
+
+func min[T ~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64](a, b T) T {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max[T ~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64](a, b T) T {
+	if a > b {
+		return a
+	}
+	return b
+}

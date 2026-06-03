@@ -264,7 +264,7 @@ func (si *streamsInfo) folderReader(r io.ReaderAt, folder int, password string) 
 	out := make([]io.ReadCloser, f.out)
 
 	packedOffset := 0
-	for i := range folder {
+	for i := 0; i < folder; i++ {
 		packedOffset += len(si.unpackInfo.folder[i].packed)
 	}
 
@@ -319,7 +319,7 @@ func (si *streamsInfo) folderReader(r io.ReaderAt, folder int, password string) 
 
 	unbound := make([]uint64, 0, f.out)
 
-	for i := range f.out {
+	for i := uint64(0); i < f.out; i++ {
 		if bp := f.findOutBindPair(i); bp == nil {
 			unbound = append(unbound, i)
 		}

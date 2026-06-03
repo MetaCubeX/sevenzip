@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/bodgit/sevenzip/internal/util"
 	"github.com/hashicorp/go-multierror"
+	"github.com/metacubex/sevenzip/internal/util"
 )
 
 type readCloser struct {

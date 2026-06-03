@@ -1,4 +1,4 @@
-module github.com/bodgit/sevenzip
+module github.com/metacubex/sevenzip
 
 go 1.19
 

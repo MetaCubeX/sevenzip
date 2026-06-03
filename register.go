@@ -5,17 +5,17 @@ import (
 	"io"
 	"sync"
 
-	"github.com/bodgit/sevenzip/internal/aes7z"
-	"github.com/bodgit/sevenzip/internal/bcj2"
-	"github.com/bodgit/sevenzip/internal/bra"
-	"github.com/bodgit/sevenzip/internal/brotli"
-	"github.com/bodgit/sevenzip/internal/bzip2"
-	"github.com/bodgit/sevenzip/internal/deflate"
-	"github.com/bodgit/sevenzip/internal/delta"
-	"github.com/bodgit/sevenzip/internal/lz4"
-	"github.com/bodgit/sevenzip/internal/lzma"
-	"github.com/bodgit/sevenzip/internal/lzma2"
-	"github.com/bodgit/sevenzip/internal/zstd"
+	"github.com/metacubex/sevenzip/internal/aes7z"
+	"github.com/metacubex/sevenzip/internal/bcj2"
+	"github.com/metacubex/sevenzip/internal/bra"
+	"github.com/metacubex/sevenzip/internal/brotli"
+	"github.com/metacubex/sevenzip/internal/bzip2"
+	"github.com/metacubex/sevenzip/internal/deflate"
+	"github.com/metacubex/sevenzip/internal/delta"
+	"github.com/metacubex/sevenzip/internal/lz4"
+	"github.com/metacubex/sevenzip/internal/lzma"
+	"github.com/metacubex/sevenzip/internal/lzma2"
+	"github.com/metacubex/sevenzip/internal/zstd"
 )
 
 // Decompressor describes the function signature that decompression/decryption

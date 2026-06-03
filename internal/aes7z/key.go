@@ -7,8 +7,8 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/bodgit/sevenzip/internal/util"
 	lru "github.com/hashicorp/golang-lru/v2"
-	"go4.org/syncutil"
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 )
@@ -23,7 +23,7 @@ const cacheSize = 10
 
 //nolint:gochecknoglobals
 var (
-	once  syncutil.Once
+	once  util.Once
 	cache *lru.Cache[cacheKey, []byte]
 )
 

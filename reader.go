@@ -22,7 +22,6 @@ import (
 	"github.com/bodgit/sevenzip/internal/pool"
 	"github.com/bodgit/sevenzip/internal/util"
 	"github.com/hashicorp/go-multierror"
-	"go4.org/readerutil"
 )
 
 var (
@@ -213,7 +212,7 @@ func OpenReaderWithPassword(name, password string) (*ReadCloser, error) {
 	files := []*os.File{f}
 
 	if ext := filepath.Ext(name); ext == ".001" {
-		sr := []readerutil.SizeReaderAt{io.NewSectionReader(f, 0, size)}
+		sr := []util.SizeReaderAt{io.NewSectionReader(f, 0, size)}
 
 		for i := 2; true; i++ {
 			f, err := os.Open(fmt.Sprintf("%s.%03d", strings.TrimSuffix(name, ext), i))
@@ -243,7 +242,7 @@ func OpenReaderWithPassword(name, password string) (*ReadCloser, error) {
 			sr = append(sr, io.NewSectionReader(f, 0, info.Size()))
 		}
 
-		mr := readerutil.NewMultiReaderAt(sr...)
+		mr := util.NewMultiReaderAt(sr...)
 		reader, size = mr, mr.Size()
 	}
 

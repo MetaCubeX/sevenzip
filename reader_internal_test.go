@@ -3,6 +3,7 @@ package sevenzip
 
 import (
 	"errors"
+	"io"
 	iofs "io/fs"
 	"os"
 	"testing"
@@ -411,4 +412,41 @@ func TestOpenReader(t *testing.T) {
 			}()
 		})
 	}
+}
+
+func TestFileOpenEmptyFileImplementsFSFile(t *testing.T) {
+	f := &File{FileHeader: FileHeader{Name: "empty.mrs"}}
+	f.isEmptyFile = true
+
+	rc, err := f.Open()
+	require.NoError(t, err)
+	t.Cleanup(func() { assert.NoError(t, rc.Close()) })
+
+	fh, ok := rc.(iofs.File)
+	require.True(t, ok, "open result of an empty file must implement io/fs.File")
+
+	fi, err := fh.Stat()
+	require.NoError(t, err)
+	assert.Equal(t, "empty.mrs", fi.Name())
+	assert.Equal(t, int64(0), fi.Size())
+
+	n, err := rc.Read(make([]byte, 8))
+	assert.Equal(t, 0, n)
+	assert.ErrorIs(t, err, io.EOF)
+}
+
+func TestFileOpenEmptyStreamImplementsFSFile(t *testing.T) {
+	f := &File{FileHeader: FileHeader{Name: "dir/"}}
+	f.isEmptyStream = true
+
+	rc, err := f.Open()
+	require.NoError(t, err)
+	t.Cleanup(func() { assert.NoError(t, rc.Close()) })
+
+	fh, ok := rc.(iofs.File)
+	require.True(t, ok, "open result of an empty stream must implement io/fs.File")
+
+	fi, err := fh.Stat()
+	require.NoError(t, err)
+	assert.Equal(t, int64(0), fi.Size())
 }

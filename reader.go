@@ -82,6 +82,21 @@ type fileReader struct {
 	n  int64
 }
 
+// An emptyFile is the [iofs.File] representation of a directory or of an
+// empty file. Contrary to a plain [io.NopCloser] reader it implements
+// [iofs.File] as well, which [Reader.Open] asserts on.
+type emptyFile struct {
+	header *FileHeader
+}
+
+func (*emptyFile) Read([]byte) (int, error) { return 0, io.EOF }
+
+func (*emptyFile) Close() error { return nil }
+
+func (ef *emptyFile) Stat() (iofs.FileInfo, error) {
+	return headerFileInfo{ef.header}, nil
+}
+
 func (fr *fileReader) Stat() (iofs.FileInfo, error) {
 	return headerFileInfo{&fr.f.FileHeader}, nil
 }
@@ -147,8 +162,9 @@ func (fr *fileReader) Close() error {
 // contents. Multiple files may be read concurrently.
 func (f *File) Open() (io.ReadCloser, error) {
 	if f.isEmptyStream || f.isEmptyFile {
-		// Return empty reader for directory or empty file
-		return io.NopCloser(bytes.NewReader(nil)), nil
+		// Return an empty file for a directory or an empty file. The reader
+		// has to implement [iofs.File] as [Reader.Open] asserts on it.
+		return &emptyFile{header: &f.FileHeader}, nil
 	}
 
 	rc, _ := f.zip.pool[f.folder].Get(f.offset)
